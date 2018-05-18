@@ -23,11 +23,18 @@ import fivem.metamerger.merger.Merger;
 public class InputPanel extends JPanel {
 
     private HashMap<MetaFileType, java.util.List<MetaFile>> metaFiles = new HashMap<>();
-    private JFileChooser fileChooserMeta;
+    private JFileChooser fileChooserInput, fileChooserOutput;
 
     public InputPanel(GUI gui) {
-        fileChooserMeta = new JFileChooser();
-        fileChooserMeta.setMultiSelectionEnabled(true);
+        fileChooserInput = new JFileChooser();
+        fileChooserInput.setMultiSelectionEnabled(true);
+        fileChooserOutput = new JFileChooser();
+        try {
+            fileChooserInput.setCurrentDirectory(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()));
+            fileChooserOutput.setCurrentDirectory(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setLayout(new FlowLayout(FlowLayout.RIGHT));
 
         JButton buttonAddFile = new JButton("Add .meta File...");
@@ -35,10 +42,10 @@ public class InputPanel extends JPanel {
         buttonAddFile.setBorderPainted(false);
         buttonAddFile.setFocusPainted(false);
         buttonAddFile.addActionListener(e -> {
-            fileChooserMeta.setFileFilter(new FileNameExtensionFilter("Meta Files", "meta"));
-            int returnVal = fileChooserMeta.showOpenDialog(this);
+            fileChooserInput.setFileFilter(new FileNameExtensionFilter("Meta Files", "meta"));
+            int returnVal = fileChooserInput.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                for (File file : fileChooserMeta.getSelectedFiles()) {
+                for (File file : fileChooserInput.getSelectedFiles()) {
                     MetaFile metaFile = new MetaFile(file);
                     if (metaFile.getMetaFileType() != null) { //Is valid FiveM meta file.
                         List<MetaFile> metaFiles = new ArrayList<>();
@@ -67,14 +74,14 @@ public class InputPanel extends JPanel {
         buttonMerge.addActionListener(e -> {
             if (metaFiles.isEmpty()) {
                 gui.log(GUI.LogLevel.ERROR, "No files have been added for merging");
+                return;
             }
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Choose Destination Folder");
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            int returnVal = fileChooser.showOpenDialog(this);
+            fileChooserOutput.setDialogTitle("Choose Destination Folder");
+            fileChooserOutput.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int returnVal = fileChooserOutput.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 gui.log(GUI.LogLevel.INFO, "Preparing to merge files...");
-                File destinationFolder = fileChooser.getSelectedFile();
+                File destinationFolder = fileChooserOutput.getSelectedFile();
                 metaFiles.entrySet().stream().forEach(entry -> {
                     gui.log(GUI.LogLevel.INFO, "Merging all '" + entry.getKey().name() + "' files...");
                     Merger merger = entry.getKey().getMerger(entry.getValue());
