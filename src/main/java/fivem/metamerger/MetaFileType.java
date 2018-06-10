@@ -11,7 +11,7 @@ public enum MetaFileType {
     CARCOLS ("CVehicleModelInfoVarGlobal", new String[] {"Kits", "Lights"}),
     CARVARIATIONS ("CVehicleModelInfoVariation", new String[] {"variationData"}),
     HANDLING ("CHandlingDataMgr", new String[] {"HandlingData"}),
-    VEHICLELAYOUTS ("CVehicleMetadataMgr", new String[] {}), //TODO
+    VEHICLELAYOUTS ("CVehicleMetadataMgr", new String[] {}), //TODO --Not sure if this file actually matters, I don't think it's streamed.
     VEHICLES ("CVehicleModelInfo__InitDataList", new String[] {"InitDatas", "txdRelationships"});
 
     private String nodeId;

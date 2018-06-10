@@ -96,6 +96,7 @@ public class InputPanel extends JPanel {
                         transformer.transform(source, result);
                     } catch (Exception ex) {
                         gui.log(GUI.LogLevel.ERROR, "Error: Unable to merge '" + entry.getKey().name() + "' files");
+                        gui.log(GUI.LogLevel.ERROR, ex.getMessage());
                         ex.printStackTrace();
                     }
                     gui.log(GUI.LogLevel.INFO, "Successfully merged all '" + entry.getKey().name() + "' files");
